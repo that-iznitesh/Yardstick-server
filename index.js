@@ -13,27 +13,24 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: "*",  
+  origin: ["http://localhost:5173", "https://your-frontend.vercel.app"],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
-
 
 // Mongo connect
 mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.log(err));
 
-  app.get("/health", (req, res) => {
+app.get("/health", (req, res) => {
   res.json({ status: "ok" });
-}); 
-// Routes
+});
+
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/notes", noteRoutes);
 app.use("/tenants", tenantRoutes);
 
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// ✅ Vercel ke liye sirf export
 export default app;
-
